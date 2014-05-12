@@ -1,0 +1,83 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="uiMapBaiduApp" data-ng-controller="MapCtrl">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <!-- this is the confusing part. we have to point the map marker directive
+                        at an existing google.maps.Marker object, so it can hook up events -->
+    <div ng-repeat="marker in myMarkers" ui-map-marker="myMarkers[$index]"
+         ui-event="{'map-click': 'openMarkerInfo()'}">
+    </div>
+
+    <div ui-map-info-window="myInfoWindow">
+        <h1>Marker</h1>
+        Lat: <input ng-model="currentMarkerLat">, Lng: <input ng-model="currentMarkerLng">
+        <a class="btn btn-primary"
+           ng-click="setMarkerPosition(currentMarker, currentMarkerLat, currentMarkerLng)">Set Position</a>
+    </div>
+
+    <!-- Add your site or application content here -->
+    <div class="container">
+        <div class="jumbotron">
+            <div id="map_canvas"
+                 ui-map="myMap"
+                 ui-event="{'map-click': 'addMarker($event, $params)', 'map-zoomend': 'setZoomMessage(myMap.getZoom())' }"
+                 ui-options="mapOptions">
+            </div>
+        </div>
+        <div>
+            map zoom: {{zoomMessage}}
+        </div>
+    </div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+     <script>
+       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+       ga('create', 'UA-XXXXX-X');
+       ga('send', 'pageview');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-ui-utils/event.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=kp3ODQt4pkpHMW2Yskl2Lwee"></script>
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/ui-map.js"></script>
+    <script src="scripts/app.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
