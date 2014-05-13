@@ -1,6 +1,6 @@
 {
-  "name": "uimapbaidu",
-  "version": "0.0.0",
+  "name": "angular-ui-map-baidu",
+  "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.1",

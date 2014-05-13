@@ -25,7 +25,7 @@
     <!-- this is the confusing part. we have to point the map marker directive
                         at an existing google.maps.Marker object, so it can hook up events -->
     <div ng-repeat="marker in myMarkers" ui-map-marker="myMarkers[$index]"
-         ui-event="{'map-click': 'openMarkerInfo()'}">
+         ui-event="{'map-click': 'openMarkerInfo($event, marker)'}">
     </div>
 
     <div ui-map-info-window="myInfoWindow">

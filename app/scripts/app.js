@@ -37,14 +37,15 @@ angular.module('uiMapBaiduApp', ["ui.map"])
             console.log(zoom, 'zoomed');
         };
 
-        $scope.openMarkerInfo = function (e) {
+        $scope.openMarkerInfo = function (e, marker) {
             e.preventDefault();
-            $scope.currentMarker = e;
-            $scope.currentMarkerLat = e.point.lat;
-            $scope.currentMarkerLng = e.point.lng;
+            e.stopPropagation();
+            $scope.currentMarker = marker;
+            $scope.currentMarkerLat = marker.getPosition().lat;
+            $scope.currentMarkerLng = marker.getPosition().lng;
 
             $scope.myMap.addOverlay($scope.myInfoWindow);
-            $scope.myMap.openInfoWindow($scope.myInfoWindow, e.point);
+            $scope.myMap.openInfoWindow($scope.myInfoWindow, marker.getPosition());
         };
 
         $scope.setMarkerPosition = function (marker, lat, lng) {
