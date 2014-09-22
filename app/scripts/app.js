@@ -4,7 +4,7 @@ angular.module('uiMapBaiduApp', ["ui.map"])
     .config(['uiMapLoadParamsProvider', function (uiMapLoadParamsProvider) {
         uiMapLoadParamsProvider.setParams({
             v: '2.0',
-            ak:'xxxx'// your map's develop key
+            ak:'kp3ODQt4pkpHMW2Yskl2Lwee'// your map's develop key
         });
     }])
     .controller('MapCtrl', ['$scope', function ($scope) {

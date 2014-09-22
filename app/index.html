@@ -16,6 +16,8 @@
     <!-- endbuild -->
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
     <!-- endbuild -->
   </head>
   <body ng-app="uiMapBaiduApp" ng-controller="MapCtrl" ui-map-async-load>
@@ -31,8 +33,8 @@
     <div ui-map-info-window="myInfoWindow">
         <h1>Marker</h1>
         Lat: <input ng-model="currentMarkerLat">, Lng: <input ng-model="currentMarkerLng">
-        <a class="btn btn-primary"
-           ng-click="setMarkerPosition(currentMarker, currentMarkerLat, currentMarkerLng)">Set Position</a>
+        <button class="btn btn-primary"
+           data-ng-click="console.log('click');setMarkerPosition(currentMarker, currentMarkerLat, currentMarkerLng)">Set Position</button>
     </div>
 
     <!-- Add your site or application content here -->
@@ -61,8 +63,8 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    <script type="text/javascript"
-            src="http://api.map.baidu.com/api?v=2.0&ak=kp3ODQt4pkpHMW2Yskl2Lwee"></script>
+    <!--<script type="text/javascript"
+            src="http://api.map.baidu.com/api?v=2.0&ak=kp3ODQt4pkpHMW2Yskl2Lwee"></script>-->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/ui-map.js"></script>

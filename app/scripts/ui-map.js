@@ -40,17 +40,17 @@
                         }
                     });
 
-                    if ($window.AMap) {
+                    if ($window.BMap) {
                         initMap();
                     }
 
                     function initMap() {
-                        if (opts.uiMapCache && window[attrs.uiMapCache]) {
-                            elm.replaceWith(window[attrs.uiMapCache]);
-                            map = window[attrs.uiMapCache + "Map"];
+                        if (opts.uiMapCache && $window[attrs.uiMapCache]) {
+                            elm.replaceWith($window[attrs.uiMapCache]);
+                            map = $window[attrs.uiMapCache + "Map"];
                         } else {
 
-                            map = new window.BMap.Map(elm[0], opts);
+                            map = new $window.BMap.Map(elm[0], opts);
 
                             // 上海市
                             map.centerAndZoom(new BMap.Point(121.491, 31.233), 11);
@@ -101,7 +101,7 @@
 
                     function initInfoWindow() {
                         if (!infoWindow) {
-                            infoWindow = new window.BMap.InfoWindow(elm[0], opts);
+                            infoWindow = new $window.BMap.InfoWindow(elm[0], opts);
                             model.assign(scope, infoWindow);
                         }
                         bindMapEvents(scope, infoWindowEvents, infoWindow, elm);
