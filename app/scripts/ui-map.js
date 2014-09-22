@@ -40,7 +40,7 @@
                         }
                     });
 
-                    if ($window.BMap) {
+                    if ($window.BMap&&$window.BMap.Map) {
                         initMap();
                     }
 
@@ -95,7 +95,7 @@
                         }
                     });
 
-                    if($window.BMap) {
+                    if($window.BMap&&$window.BMap.Map) {
                         initInfoWindow();
                     }
 
@@ -175,7 +175,7 @@
 
                         params.callback = "mapbaiduLoadedCallback";
 
-                        if(!$window.BMap) {
+                        if(!($window.BMap&&$window.BMap.Map)) {
                             var script = document.createElement("script");
                             script.type = "text/javascript";
                             script.src = "http://api.map.baidu.com/api?" + param(params);
