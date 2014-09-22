@@ -1,8 +1,12 @@
 'use strict';
 
 angular.module('uiMapBaiduApp', ["ui.map"])
-  .config(function () {
-  })
+    .config(['uiMapLoadParamsProvider', function (uiMapLoadParamsProvider) {
+        uiMapLoadParamsProvider.setParams({
+            v: '2.0',
+            ak:'xxxx'// your map's develop key
+        });
+    }])
     .controller('MapCtrl', ['$scope', function ($scope) {
         $scope.myMarkers = [];
 
@@ -20,7 +24,7 @@ angular.module('uiMapBaiduApp', ["ui.map"])
         };
 
         $scope.$watch('myMap', function(map) {
-            map.setCurrentCity("上海");
+            map&&map.setCurrentCity("上海");
         });
 
         $scope.addMarker = function ($event, $params) {

@@ -24,6 +24,8 @@ This will copy the UI.Map.baidu files into a `bower_components` folder, along wi
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=您的密钥"></script>
 ```
 
+### 异步加载Map
+#### 方法一
 __Make sure to listen to the [callback parameter when loading the baidu Maps API](http://developer.baidu.com/map/jsdevelop-1.htm#.E5.BC.82.E6.AD.A5.E5.8A.A0.E8.BD.BD) !
 The API must be fully loaded before this module !__
 Here we name this callback `init`. To load your angular app after the baidu Maps API you can start it with [angular.bootstrap](http://docs.angularjs.org/api/angular.bootstrap).
@@ -33,6 +35,23 @@ function init() {
   angular.bootstrap(document.getElementById("map"), ['app.ui-map']);
 }
 ```
+#### 方法二
+如下在module config中加入加载地图链接所需要的参数
+```javascript
+myAppModule.config(['uiMapLoadParamsProvider', function (uiMapLoadParamsProvider) {
+                          uiMapLoadParamsProvider.setParams({
+                              v: '2.0',
+                              ak:'xxxx'
+                          });
+                    }]);
+```
+并在html顶层dom加上 ui-map-async-load
+```html
+<body ng-controller="MapCtrl" ui-map-async-load>
+  <div ui-map="myMap" ui-options="mapOptions" class="map-canvas"></div>
+</body>
+```
+
 
 Add the UI.Map.baidu module as a dependency to your application module :
 

@@ -20,10 +20,8 @@
     }
 
     app.value('uiMapConfig', {})
-        .directive('uiMap', [
-        'uiMapConfig',
-        '$parse',
-        function (uiMapConfig, $parse) {
+        .directive('uiMap', ['uiMapConfig', '$window', '$parse',
+        function (uiMapConfig, $window, $parse) {
             var mapEvents = 'click dblclick rightclick rightdblclick maptypechange mousemove mouseover mouseout '
                 +'movestart moving moveend zoomstart zoomend addoverlay addcontrol removecontrol removeoverlay '
                 +'clearoverlays dragstart dragging dragend addtilelayer removetilelayer load resize hotspotclick '
@@ -31,50 +29,58 @@
             var options = uiMapConfig || {};
             return {
                 restrict: 'A',
-                controller: function ($scope, $element) {
-                },
                 link: function (scope, elm, attrs) {
                     var map;
 
                     var opts = angular.extend({}, options, scope.$eval(attrs.uiOptions));
-                    if (opts.uiMapCache && window[attrs.uiMapCache]) {
-                        elm.replaceWith(window[attrs.uiMapCache]);
-                        map = window[attrs.uiMapCache+"Map"];
-                    } else {
 
-                        map = new window.BMap.Map(elm[0], opts);
+                    scope.$on("map.loaded", function (e, type) {
+                        if (type == "baidu" && !map) {
+                            initMap();
+                        }
+                    });
 
-                        // 上海市
-                        map.centerAndZoom(new BMap.Point(121.491, 31.233), 11);
-
-                        /*********************** add baidu Map plugins ****************/
-                        if(opts.scrollzoom) {
-                            map.addControl(new BMap.NavigationControl());
-                            map.enableScrollWheelZoom();
-                        }
-                        if(opts.toolbar) {
-                            map.addControl(new BMap.ScaleControl());
-                            map.addControl(new BMap.MapTypeControl());
-                        }
-                        if(opts.overview) {
-                            map.addControl(new BMap.OverviewMapControl());
-                        }
-                        /*********************** end add baidu Map plugins ****************/
+                    if ($window.AMap) {
+                        initMap();
                     }
-                    var model = $parse(attrs.uiMap);
-                    //Set scope variable for the map
-                    model.assign(scope, map);
-                    bindMapEvents(scope, mapEvents, map, elm);
+
+                    function initMap() {
+                        if (opts.uiMapCache && window[attrs.uiMapCache]) {
+                            elm.replaceWith(window[attrs.uiMapCache]);
+                            map = window[attrs.uiMapCache + "Map"];
+                        } else {
+
+                            map = new window.BMap.Map(elm[0], opts);
+
+                            // 上海市
+                            map.centerAndZoom(new BMap.Point(121.491, 31.233), 11);
+
+                            /*********************** add baidu Map plugins ****************/
+                            if (opts.scrollzoom) {
+                                map.addControl(new BMap.NavigationControl());
+                                map.enableScrollWheelZoom();
+                            }
+                            if (opts.toolbar) {
+                                map.addControl(new BMap.ScaleControl());
+                                map.addControl(new BMap.MapTypeControl());
+                            }
+                            if (opts.overview) {
+                                map.addControl(new BMap.OverviewMapControl());
+                            }
+                            /*********************** end add baidu Map plugins ****************/
+                        }
+                        var model = $parse(attrs.uiMap);
+                        //Set scope variable for the map
+                        model.assign(scope, map);
+                        bindMapEvents(scope, mapEvents, map, elm);
+                    }
                 }
             };
         }
     ]);
     app.value('uiMapInfoWindowConfig', {})
-        .directive('uiMapInfoWindow', [
-        'uiMapInfoWindowConfig',
-        '$parse',
-        '$compile',
-        function (uiMapInfoWindowConfig, $parse, $compile) {
+        .directive('uiMapInfoWindow', ['uiMapInfoWindowConfig', '$window', '$parse', '$compile',
+        function (uiMapInfoWindowConfig, $window, $parse, $compile) {
             var infoWindowEvents = 'close open maximize restore clickclose';
             var options = uiMapInfoWindowConfig || {};
             return {
@@ -82,22 +88,35 @@
                     var opts = angular.extend({}, options, scope.$eval(attrs.uiOptions));
                     var model = $parse(attrs.uiMapInfoWindow);
                     var infoWindow = model(scope);
-                    if (!infoWindow) {
-                        infoWindow = new window.BMap.InfoWindow(elm[0], opts);
-                        model.assign(scope, infoWindow);
+
+                    scope.$on("map.loaded", function(e, type) {
+                        if(type == "baidu" && !infoWindow) {
+                            initInfoWindow();
+                        }
+                    });
+
+                    if($window.BMap) {
+                        initInfoWindow();
                     }
-                    bindMapEvents(scope, infoWindowEvents, infoWindow, elm);
-                    /* The info window's contents dont' need to be on the dom anymore,
-                     google maps has them stored.  So we just replace the infowindow element
-                     with an empty div. (we don't just straight remove it from the dom because
-                     straight removing things from the dom can mess up angular) */
-                    elm.replaceWith('<div></div>');
-                    //Decorate infoWindow.open to $compile contents before opening
-                    var _redraw = infoWindow.redraw;
-                    infoWindow.redraw = function open(a1, a2, a3, a4, a5, a6) {
-                        $compile(elm.contents())(scope);
-                        _redraw.call(infoWindow, a1, a2, a3, a4, a5, a6);
-                    };
+
+                    function initInfoWindow() {
+                        if (!infoWindow) {
+                            infoWindow = new window.BMap.InfoWindow(elm[0], opts);
+                            model.assign(scope, infoWindow);
+                        }
+                        bindMapEvents(scope, infoWindowEvents, infoWindow, elm);
+                        /* The info window's contents dont' need to be on the dom anymore,
+                         google maps has them stored.  So we just replace the infowindow element
+                         with an empty div. (we don't just straight remove it from the dom because
+                         straight removing things from the dom can mess up angular) */
+                        elm.replaceWith('<div></div>');
+                        //Decorate infoWindow.open to $compile contents before opening
+                        var _redraw = infoWindow.redraw;
+                        infoWindow.redraw = function open(a1, a2, a3, a4, a5, a6) {
+                            $compile(elm.contents())(scope);
+                            _redraw.call(infoWindow, a1, a2, a3, a4, a5, a6);
+                        };
+                    }
                 }
             };
         }
@@ -129,4 +148,109 @@
     mapOverlayDirective('uiMapPolygon', 'click dblclick mousedown mouseup mouseout mouseover remove lineupdate');
     mapOverlayDirective('uiMapCircle', 'click dblclick mousedown mouseup mouseout mouseover remove lineupdate');
 //    mapOverlayDirective('uiMapGroundOverlay', 'map_changed visible_changed click mousedown mousemove mouseout mouseover mouseup rightclick');
+
+    app.provider('uiMapLoadParams', function uiMapLoadParams() {
+        var params = {};
+
+        this.setParams = function(ps) {
+            params = ps;
+        };
+
+        this.$get = function uiMapLoadParamsFactory() {
+
+            return params;
+        };
+    })
+        .directive('uiMapAsyncLoad', ['$window', '$parse', 'uiMapLoadParams',
+            function ($window, $parse, uiMapLoadParams) {
+                return {
+                    restrict: 'A',
+                    link: function (scope, element, attrs) {
+
+                        $window.mapbaiduLoadedCallback = function mapbaiduLoadedCallback(){
+                            scope.$broadcast("map.loaded", "baidu");
+                        };
+
+                        var params = angular.extend({}, uiMapLoadParams, scope.$eval(attrs.uiMapAsyncLoad));
+
+                        params.callback = "mapbaiduLoadedCallback";
+
+                        if(!$window.BMap) {
+                            var script = document.createElement("script");
+                            script.type = "text/javascript";
+                            script.src = "http://api.map.baidu.com/api?" + param(params);
+                            document.body.appendChild(script);
+                        }else {
+                            mapbaiduLoadedCallback();
+                        }
+                    }
+                }
+            }]);
+
+    /**
+     * 序列化js对象
+     *
+     * @param a
+     * @param traditional
+     * @returns {string}
+     */
+    function param(a, traditional) {
+        var prefix,
+            s = [],
+            add = function (key, value) {
+                // If value is a function, invoke it and return its value
+                value = angular.isFunction(value) ? value() : ( value == null ? "" : value );
+                s[ s.length ] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
+            };
+
+        // If an array was passed in, assume that it is an array of form elements.
+        if (angular.isArray(a) || ( a.jquery && !angular.isObject(a) )) {
+            // Serialize the form elements
+            angular.forEach(a, function () {
+                add(this.name, this.value);
+            });
+
+        } else {
+            // If traditional, encode the "old" way (the way 1.3.2 or older
+            // did it), otherwise encode params recursively.
+            for (prefix in a) {
+                buildParams(prefix, a[ prefix ], traditional, add);
+            }
+        }
+
+        // Return the resulting serialization
+        return s.join("&").replace(r20, "+");
+    }
+
+    var r20 = /%20/g;
+
+    function buildParams(prefix, obj, traditional, add) {
+        var name;
+
+        if (angular.isArray(obj)) {
+            // Serialize array item.
+            angular.forEach(obj, function (v, i) {
+                if (traditional || rbracket.test(prefix)) {
+                    // Treat each array item as a scalar.
+                    add(prefix, v);
+
+                } else {
+                    // Item is non-scalar (array or object), encode its numeric index.
+                    buildParams(prefix + "[" + ( typeof v === "object" ? i : "" ) + "]", v, traditional, add);
+                }
+            });
+
+        } else if (!traditional && angular.isObject(obj)) {
+            // Serialize object item.
+            for (name in obj) {
+                buildParams(prefix + "[" + name + "]", obj[ name ], traditional, add);
+            }
+
+        } else {
+            // Serialize scalar item.
+            add(prefix, obj);
+        }
+    }
+
+    var decode = decodeURIComponent;
 }());
