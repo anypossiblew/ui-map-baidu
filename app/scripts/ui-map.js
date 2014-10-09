@@ -20,8 +20,8 @@
     }
 
     app.value('uiMapConfig', {})
-        .directive('uiMap', ['uiMapConfig', '$window', '$parse',
-        function (uiMapConfig, $window, $parse) {
+        .directive('uiMap', ['uiMapConfig', '$window', '$parse', '$timeout',
+        function (uiMapConfig, $window, $parse, $timeout) {
             var mapEvents = 'click dblclick rightclick rightdblclick maptypechange mousemove mouseover mouseout '
                 +'movestart moving moveend zoomstart zoomend addoverlay addcontrol removecontrol removeoverlay '
                 +'clearoverlays dragstart dragging dragend addtilelayer removetilelayer load resize hotspotclick '
@@ -41,7 +41,10 @@
                     });
 
                     if ($window.BMap&&$window.BMap.Map) {
-                        initMap();
+                        $timeout(function() {
+                            initMap();
+                        }, 200);
+
                     }
 
                     function initMap() {
