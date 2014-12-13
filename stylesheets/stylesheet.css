@@ -5,7 +5,7 @@ body {
   color: #eaeaea;
   font: 16px;
   line-height: 1.5;
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  font-family: "Microsoft YaHei", Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
 /* General & 'Reset' Stuff */
@@ -146,7 +146,8 @@ ul li:before {
 blockquote {
   color: #aaa;
   padding-left: 10px;
-  border-left: 1px dotted #666;
+  border-left: 3px solid #b5e853;
+  border-radius: 5px;
 }
 
 pre {
@@ -244,4 +245,62 @@ a {
 
 .cf {
   zoom:1;
+}
+
+.map-container {
+  position: relative;
+  margin-left: -100px;
+  margin-right: -100px;
+  height: 500px;
+  border: 5px solid #b5e853;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 30px;
+}
+.map-container .loading{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  -webkit-transition:all linear 1s;
+  transition:all linear 1s;
+}
+
+#map_canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.side-nav {
+  position: absolute;
+  left: 50px;
+  width: 120px;
+  background-color: #b5e853;
+  border-radius: 2px;
+  padding: 5px;
+  color: white;
+  z-index: 1000;
+}
+.side-nav.side-nav-fixed {
+  position: fixed;
+  top: 50px;
+}
+.sticky-wrapper {
+  position: absolute;
+}
+.side-nav a {
+  color: white;
+}
+.side-nav ul li:before {
+  color: white;
+}
+
+pre {
+  max-height: 400px;
 }
