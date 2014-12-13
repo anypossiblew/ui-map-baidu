@@ -1,4 +1,6 @@
-# baidu map for angular ui [![Build Status](https://secure.travis-ci.org/yeoman/generator-jquery.svg?branch=master)](https://travis-ci.org/yeoman/generator-jquery)
+# Angular ui for baidu map  
+[![GitHub version](https://badge.fury.io/gh/anypossiblew%2Fui-map-baidu.svg)](http://badge.fury.io/gh/anypossiblew%2Fui-map-baidu)
+[![Bower version](https://badge.fury.io/bo/angular-ui-map-baidu.png)](http://badge.fury.io/bo/angular-ui-map-baidu)  
 
 本项目使用Yeoman generator生成的，过程如下：
 ## 创建项目过程
@@ -39,11 +41,11 @@ function init() {
 如下在module config中加入加载地图链接所需要的参数
 ```javascript
 myAppModule.config(['uiMapLoadParamsProvider', function (uiMapLoadParamsProvider) {
-                          uiMapLoadParamsProvider.setParams({
-                              v: '2.0',
-                              ak:'xxxx'
-                          });
-                    }]);
+                      uiMapLoadParamsProvider.setParams({
+                          v: '2.0',
+                          ak:'xxxx'
+                      });
+                }]);
 ```
 并在html顶层dom加上 ui-map-async-load
 ```html
