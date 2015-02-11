@@ -4,9 +4,10 @@
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="javascripts/prism/prism.css" media="screen">
+      <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+      <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+      <link rel="stylesheet" type="text/css" href="javascripts/prism/prism.css" media="screen">
 
     <title>ui-map-baidu by anypossiblew</title>
   </head>
@@ -29,12 +30,13 @@
     <div class="side-nav"
          waypoint-sticky="{'stuckClass': 'side-nav-fixed', 'offset': '50px'}" >
         <ul>
-            <li><a href="#map">Map</a></li>
-            <li><a href="#install">Install</a></li>
-            <li><a href="#usage">Usage</a></li>
-            <li><a href="#aync">异步加载</a></li>
-            <li><a href="#options">Options</a></li>
-            <li><a href="#ui-event">UI.Event</a></li>
+            <li><a>Map</a></li>
+            <li><a>Install</a></li>
+            <li><a>Usage</a></li>
+            <li><a>异步加载</a></li>
+            <li><a>缓存地图</a></li>
+            <li><a>Options</a></li>
+            <li><a>UI.Event</a></li>
         </ul>
     </div>
 
@@ -46,28 +48,17 @@
 
 <p>Angularjs ui module for baidu map</p>
 
-          <div ng-repeat="marker in myMarkers" ui-map-marker="myMarkers[$index]"
-               ui-event="{'map-click': 'openMarkerInfo($event, marker)'}">
-          </div>
+          <ul class="nav nav-tabs">
+              <li role="presentation"
+                  ui-sref-active="active">
+                  <a href ui-sref="cache">有缓存的地图</a></li>
+              <li role="presentation"
+                  ui-sref-active="active">
+                  <a href ui-sref="nocache">没有缓存的地图</a></li>
+          </ul>
 
-          <div ui-map-info-window="myInfoWindow">
-              <h1>Marker</h1>
-              Lat: <input ng-model="currentMarkerLat">, Lng: <input ng-model="currentMarkerLng">
-              <button class="btn btn-primary"
-                      ng-click="setMarkerPosition(currentMarker, currentMarkerLat, currentMarkerLng)">Set Position</button>
-          </div>
-          <div>
-              map zoom: {{zoomMessage}}
-          </div>
-          <div class="map-container">
-              <div id="map_canvas"
-                   ui-map="myMap"
-                   ui-event="{'map-click': 'addMarker($event, $params)', 'map-zoomend': 'setZoomMessage(myMap.getZoom())' }"
-                   ui-options="mapOptions">
-              </div>
-              <div class="loading" ng-hide="myMap">
-                  <span>地图异步加载中...</span>
-              </div>
+          <div ui-view>
+
           </div>
 
           <h3 id="install">Install</h3>
@@ -119,13 +110,21 @@
     &lt;div ui-map="myMap" ui-options="mapOptions" class="map-canvas"&gt;&lt;/div&gt;
 &lt;/body&gt;</code></pre>
 
+          <br>
+          <h3 id="cache">缓存Map</h3>
+          <p>在使用angularjs的ui router时，经常需要在不同router之间切换，但不希望每次切换都重新创建地图对象。通常使用的方法是在controller destroy时保存地图各项状态参数（如level、center等）和地图覆盖物的参数（如marker的point位置），在下次创建地图时重新绘制；
+          此‘ui-map’directive提供一种简便的方式，在controller destroy时保存整个地图对象和对于的dom，在下次创建地图时直接使用缓存的地图对象:</p>
+          <p>在‘ui-map’directive上添加ui-map-cache属性，并设置值为缓存地图对象的名称（此名称应该是全局唯一的）。</p>
+<pre><code class="language-markup">&lt;body ng-controller="MapCtrl" ui-map-async-load&gt
+    &lt;div ui-map="myMap" ui-map-cache="mapCacheName" ui-options="mapOptions" class="map-canvas"&gt;&lt;/div&gt;
+    &lt;/body&gt;</code></pre>
+
+          <br>
           <h3 id="options">Options</h3>
           <p>在controller里的$scope上设置<a href="http://developer.baidu.com/map/reference/index.php?title=Class:%E6%A0%B8%E5%BF%83%E7%B1%BB/MapOptions">BMap.MapOptions object</a>可以通过ui-map directive的ui-options属性传给地图</p>
 <pre><code class="language-javascript">myAppModule.controller('MapCtrl', ['$scope', function ($scope) {
     $scope.mapOptions = {
-        mapType: BMap.MapType.BMAP_PERSPECTIVE_MAP,
-        // ui map config
-        uiMapCache: true // (mobile app适用)是否使用缓存来缓存此map dom，而不是每次链接跳转来都重新创建
+        mapType: BMap.MapType.BMAP_PERSPECTIVE_MAP
     };
 }]);</code></pre>
 
@@ -140,6 +139,8 @@
     },
     ngZoom: 5
 };</code></pre>
+
+          <br>
           <h3 id="ui-event">UI.Event</h3>
           <p>使用<a href="http://angular-ui.github.io/ui-utils/#/event">UI.Event</a>插件可以自定义用户操作事件的响应处理逻辑，只需要在原事件名前加上前缀'map-'以绑定响应事件。
               例如地图Map的'click'或'moveend'事件可以使用UI.Event对象的key <b><i>map-click</i></b>或<b><i>map-moveend</i></b>来绑定事件，如下代码</p>
@@ -153,10 +154,12 @@
     </div>
 
     <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
     <script type="text/javascript" src="bower_components/angular-ui-utils/event.min.js"></script>
     <script type="text/javascript" src="bower_components/angular-ui-map-baidu/ui-map.js"></script>
     <script type="text/javascript" src="bower_components/jquery-waypoints/waypoints.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="javascripts/prism/prism.js"></script>
     <script type="text/javascript" src="javascripts/app.js"></script>
     <script type="text/javascript" src="javascripts/waypoint.js"></script>

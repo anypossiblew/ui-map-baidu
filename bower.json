@@ -17,8 +17,10 @@
   ],
   "dependencies": {
     "jquery": "2.1.1",
-    "angular-ui-map-baidu": "1.1.5",
-    "jquery-waypoints": "2.0.5"
+    "angular-ui-map-baidu": "1.1.6",
+    "jquery-waypoints": "2.0.5",
+    "angular-ui-router": "0.2.13",
+    "bootstrap": "~3.3.2"
   },
   "license": "MIT",
   "private": true,

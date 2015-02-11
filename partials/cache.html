@@ -1,0 +1,27 @@
+<div>
+    <p>with map cache</p>
+    <div ng-repeat="marker in myMarkers" ui-map-marker="myMarkers[$index]"
+         ui-event="{'map-click': 'openMarkerInfo($event, marker)'}">
+    </div>
+
+    <div ui-map-info-window="myInfoWindow">
+        <h1>Marker</h1>
+        Lat: <input ng-model="currentMarkerLat">, Lng: <input ng-model="currentMarkerLng">
+        <button class="btn btn-primary"
+                ng-click="setMarkerPosition(currentMarker, currentMarkerLat, currentMarkerLng)">Set Position</button>
+    </div>
+    <div>
+        map zoom: {{zoomMessage}}
+    </div>
+    <div class="map-container">
+        <div id="map_canvas"
+             ui-map="myMap"
+             ui-map-cache="home"
+             ui-event="{'map-click': 'addMarker($event, $params)', 'map-zoomend': 'setZoomMessage(myMap.getZoom())' }"
+             ui-options="mapOptions">
+        </div>
+        <div class="loading" ng-hide="myMap">
+            <span>地图异步加载中...</span>
+        </div>
+    </div>
+</div>
