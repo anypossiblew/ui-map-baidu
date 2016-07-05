@@ -96,7 +96,7 @@
             var uiMapCacheElm = attrs.uiMapCache,
                 uiMapCache    = uiMapCacheElm + "Map";
 
-            var mapElem = elm.find(".map-canvas");
+            var mapElem = elm.find('div');
             mapElem.css("width", "100%");
             mapElem.css("height", "100%");
 
@@ -119,6 +119,7 @@
                 map = $window[uiMapCache];
               } else {
                 map = new BMap.Map(mapElem[0], opts);
+
                 // init map's center
                 if (opts.ngCenter &&
                   angular.isNumber(opts.ngCenter.lat) &&
@@ -201,11 +202,11 @@
                with an empty div. (we don't just straight remove it from the dom because
                straight removing things from the dom can mess up angular) */
               elm.replaceWith('<div></div>');
-              //Decorate infoWindow.open to $compile contents before opening
-              var _redraw = infoWindow.redraw;
-              infoWindow.redraw = function open(a1, a2, a3, a4, a5, a6) {
+              //Decorate infoWindow.show to $compile contents before opening
+              var _show = infoWindow.show;
+              infoWindow.show = function open(a1, a2, a3, a4, a5, a6) {
                 $compile(elm.contents())(scope);
-                _redraw.call(infoWindow, a1, a2, a3, a4, a5, a6);
+                _show.call(infoWindow, a1, a2, a3, a4, a5, a6);
               };
             }
           }

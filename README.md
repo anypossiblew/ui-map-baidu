@@ -12,6 +12,13 @@ You can get it from [Bower](http://bower.io/)
 bower install angular-ui-map-baidu
 ```
 
+## Note
+- Baidu map must be set initial center and zoom
+
+## Changelog
+### 1.1.7 - 2016-07-05
+- Fixed element's find function issue
+
 ## License
 
 (The MIT License)

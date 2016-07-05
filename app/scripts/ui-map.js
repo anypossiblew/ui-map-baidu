@@ -96,7 +96,7 @@
             var uiMapCacheElm = attrs.uiMapCache,
                 uiMapCache    = uiMapCacheElm + "Map";
 
-            var mapElem = elm.find(".map-canvas");
+            var mapElem = elm.find('div');
             mapElem.css("width", "100%");
             mapElem.css("height", "100%");
 
@@ -119,6 +119,7 @@
                 map = $window[uiMapCache];
               } else {
                 map = new BMap.Map(mapElem[0], opts);
+
                 // init map's center
                 if (opts.ngCenter &&
                   angular.isNumber(opts.ngCenter.lat) &&

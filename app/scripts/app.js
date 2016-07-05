@@ -11,6 +11,11 @@ angular.module('uiMapBaiduApp', ["ui.map"])
         $scope.myMarkers = [];
 
         $scope.mapOptions = {
+          ngCenter: {
+            lat: 31,
+            lng: 121
+          },
+          ngZoom: 10,
             // map plugin config
             toolbar: true,
             scrollzoom: true,
