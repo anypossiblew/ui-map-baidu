@@ -83,7 +83,7 @@
         return {
           restrict: 'EA',
           transclude: true,
-          template: '<div class="map-canvas"></div><div ng-transclude></div>',
+          template: '<div class="map-canvas"></div><div ng-transclude style="display:none"></div>',
           link: function (scope, elm, attrs) {
 
             var map,
